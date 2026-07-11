@@ -1,4 +1,5 @@
 ﻿using OnlineShopProject.WebApi.Domain.Entities.Abstractions;
+using OnlineShopProject.WebApi.Domain.Entities.OrderEntity.Enums;
 using OnlineShopProject.WebApi.Domain.Entities.OrderEntity.Excepions;
 using OnlineShopProject.WebApi.Domain.Entities.UserEntity;
 
@@ -11,11 +12,14 @@ public class Order : BaseEntity
         UserId = userId;
         TotalPrice =0;
         CreaterId = createrId;
+        Status = Status.Pending;
     }
 
     public Guid UserId { get; private set; }
     public decimal TotalPrice { get; private set; }
     public DateOnly? DeliveryDate { get; private set; }
+    public Status Status { get; private set; }
+
 
     public List<OrderItem> Items { get; private set; } = [];
     public User User { get; private set; }
@@ -26,6 +30,17 @@ public class Order : BaseEntity
             throw new DeliveryDataException("delivery time most be in future");
 
         DeliveryDate = deliveryDate;
+    }
+
+    public void UpdatePrice(decimal request)
+    {
+        TotalPrice=+ request;
+    }
+
+
+    public void ChangeStatus(Status status)
+    {
+        Status = status;
     }
 
 }
