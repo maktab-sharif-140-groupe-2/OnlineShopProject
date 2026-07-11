@@ -1,4 +1,4 @@
-﻿namespace OnlineShopProject.WebApi.Business.Services.Implementation
+﻿namespace OnlineShopProject.WebApi.Business.Exceptions
 {
     [Serializable]
     internal class DouplicateException : Exception

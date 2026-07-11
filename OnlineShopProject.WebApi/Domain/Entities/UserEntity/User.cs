@@ -63,13 +63,15 @@ public class User : IdentityUser<Guid>, IEntity
         Plan = Plan.Free;
         LastPermium = null;
     }
-    public void Banning()
+    public void Banning(Guid modifiederId)
     {
         Status = Status.Banned;
+        Update(modifiederId);
     }
-    public void UnBanning()
+    public void UnBanning(Guid modifiederId)
     {
         Status = Status.Active;
+        Update(modifiederId);   
     }
     public void SoftDelete()
     {
