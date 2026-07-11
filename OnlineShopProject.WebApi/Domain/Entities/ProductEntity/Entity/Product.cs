@@ -23,7 +23,7 @@ public class Product : BaseEntity
 
     public int Stock { get; private set; }
 
-    public void ChangeStock(int request)
+    public void ChangeStock(int request,Guid modifierId)
     {
         if (Stock + request < 0)
             throw new ProcessingStockException("request count is higher than totla stock in wearhouse");
@@ -31,11 +31,13 @@ public class Product : BaseEntity
         if(request==0)
             throw new ProcessingStockException("request can't be zero");
         Stock=+request;
+        ModifiederId = modifierId;
     }
-    public void ChangePrice(decimal newPrice)
+    public void ChangePrice(decimal newPrice, Guid modifierId)
     {
         if (newPrice <= 0)
             throw new InputPriceException("price can't be zero or negative");
         Price = newPrice;
+        ModifiederId = modifierId;
     }
 }

@@ -9,5 +9,15 @@ namespace OnlineShopProject.WebApi.Infrastructure.Repositories.Implementation
         public ProductRepository(ApplicationDbContext applicationDb) : base(applicationDb)
         {
         }
+
+        public async Task UpdatePriceAsync(Product product, decimal newPrice, Guid modifierId)
+        {
+            product.ChangePrice(newPrice,modifierId);
+        }
+
+        public async Task UpdateStockAsync(Product product, int stock, Guid modifierId)
+        {
+            product.ChangeStock(stock,modifierId);
+        }
     }
 }

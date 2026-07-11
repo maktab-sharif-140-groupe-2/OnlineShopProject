@@ -12,16 +12,22 @@ namespace OnlineShopProject.WebApi.Infrastructure.Repositories.Implementation
         {
             _applicationDb = applicationDb;
             ProductRepository = new ProductRepository(applicationDb);
+            OrderRepository = new OrderRepository(applicationDb);
+            OrderItemRepository=new OrderItemRepository(applicationDb);
         }
         private readonly ApplicationDbContext _applicationDb;
 
         public IProductRepository ProductRepository { get; set; }
+
+        public IOrderItemRepository OrderItemRepository { get; private set; }
 
         public UserManager<User> UserManager { get; set; }
 
         public SignInManager<User> _signInManager { get; set; }
 
         public RoleManager<Role> _roleManager { get; set; }
+
+        public IOrderRepository OrderRepository { get; set; }
 
         public async Task SaveAsync()
         {
