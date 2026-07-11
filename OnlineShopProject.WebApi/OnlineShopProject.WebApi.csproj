@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="RepositoryIntrefaces\" />
-    <Folder Include="Repositories\" />
+    <Compile Remove="RepositoryIntrefaces\**" />
+    <Content Remove="RepositoryIntrefaces\**" />
+    <EmbeddedResource Remove="RepositoryIntrefaces\**" />
+    <None Remove="RepositoryIntrefaces\**" />
   </ItemGroup>
 
   <ItemGroup>

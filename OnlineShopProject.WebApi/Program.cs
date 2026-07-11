@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using OnlineShopProject.WebApi.Common.Extensions;
-using OnlineShopProject.WebApi.Contracts.JwtSetting;
-using OnlineShopProject.WebApi.Data;
-using OnlineShopProject.WebApi.Entities.RoleEntity;
-using OnlineShopProject.WebApi.Entities.UserEntity;
-using OnlineShopProject.WebApi.ServiceInterfaces;
-using OnlineShopProject.WebApi.Services;
+using OnlineShopProject.WebApi.Business.Contracts.JwtSetting;
+using OnlineShopProject.WebApi.Business.Extensions;
+using OnlineShopProject.WebApi.Business.Services.Implementation;
+using OnlineShopProject.WebApi.Business.Services.Interface;
+using OnlineShopProject.WebApi.Domain.Entities.RoleEntity;
+using OnlineShopProject.WebApi.Domain.Entities.UserEntity;
+using OnlineShopProject.WebApi.Infrastructure.Data;
+using OnlineShopProject.WebApi.Infrastructure.Repositories.Implementation;
+using OnlineShopProject.WebApi.Infrastructure.Repositories.Interface;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -69,7 +71,8 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
-
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IProductService, ProductService>();
 var jwtSettings = builder.Configuration.GetSection("JwtConfigurations").Get<JwtSettings>()!;
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtConfigurations"));
 builder.Services.AddAuthentication(options =>
@@ -96,6 +99,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
+await app.SeedDataBaseAsync();
 
 if (app.Environment.IsDevelopment())
 {
@@ -103,7 +107,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-await app.SeedDataBaseAsync();
 
 app.UseHttpsRedirection();
 
