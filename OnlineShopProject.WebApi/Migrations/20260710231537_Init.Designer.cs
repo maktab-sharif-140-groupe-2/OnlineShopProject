@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShopProject.WebApi.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using OnlineShopProject.WebApi.Infrastructure.Data;
 namespace OnlineShopProject.WebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260710231537_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,14 +139,8 @@ namespace OnlineShopProject.WebApi.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<Guid?>("CreaterId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateOnly?>("DeliveryDate")
                         .HasColumnType("date");
@@ -154,9 +151,6 @@ namespace OnlineShopProject.WebApi.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ModifiederId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(16,2)");
 
@@ -164,12 +158,6 @@ namespace OnlineShopProject.WebApi.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreaterId");
-
-                    b.HasIndex("DeleterId");
-
-                    b.HasIndex("ModifiederId");
 
                     b.HasIndex("UserId");
 
@@ -187,23 +175,14 @@ namespace OnlineShopProject.WebApi.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<Guid?>("CreaterId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiederId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
@@ -215,12 +194,6 @@ namespace OnlineShopProject.WebApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreaterId");
-
-                    b.HasIndex("DeleterId");
-
-                    b.HasIndex("ModifiederId");
 
                     b.HasIndex("OrderId");
 
@@ -244,23 +217,14 @@ namespace OnlineShopProject.WebApi.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<Guid?>("CreaterId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiederId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -273,12 +237,6 @@ namespace OnlineShopProject.WebApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreaterId");
-
-                    b.HasIndex("DeleterId");
-
-                    b.HasIndex("ModifiederId");
 
                     b.ToTable("Products");
                 });
@@ -296,14 +254,8 @@ namespace OnlineShopProject.WebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreaterId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -314,9 +266,6 @@ namespace OnlineShopProject.WebApi.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ModifiederId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -326,12 +275,6 @@ namespace OnlineShopProject.WebApi.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreaterId");
-
-                    b.HasIndex("DeleterId");
-
-                    b.HasIndex("ModifiederId");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
@@ -360,14 +303,8 @@ namespace OnlineShopProject.WebApi.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreaterId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeleterId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -383,9 +320,6 @@ namespace OnlineShopProject.WebApi.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateOnly?>("LastPermium")
-                        .HasColumnType("date");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -394,9 +328,6 @@ namespace OnlineShopProject.WebApi.Migrations
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiederId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -432,12 +363,6 @@ namespace OnlineShopProject.WebApi.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreaterId");
-
-                    b.HasIndex("DeleterId");
-
-                    b.HasIndex("ModifiederId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -503,53 +428,17 @@ namespace OnlineShopProject.WebApi.Migrations
 
             modelBuilder.Entity("OnlineShopProject.WebApi.Domain.Entities.OrderEntity.Entity.Order", b =>
                 {
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Creater")
-                        .WithMany()
-                        .HasForeignKey("CreaterId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Modifieder")
-                        .WithMany()
-                        .HasForeignKey("ModifiederId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Creater");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifieder");
-
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("OnlineShopProject.WebApi.Domain.Entities.OrderEntity.Entity.OrderItem", b =>
                 {
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Creater")
-                        .WithMany()
-                        .HasForeignKey("CreaterId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Modifieder")
-                        .WithMany()
-                        .HasForeignKey("ModifiederId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("OnlineShopProject.WebApi.Domain.Entities.OrderEntity.Entity.Order", null)
                         .WithMany("Items")
                         .HasForeignKey("OrderId")
@@ -562,85 +451,7 @@ namespace OnlineShopProject.WebApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Creater");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifieder");
-
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("OnlineShopProject.WebApi.Domain.Entities.ProductEntity.Entity.Product", b =>
-                {
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Creater")
-                        .WithMany()
-                        .HasForeignKey("CreaterId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Modifieder")
-                        .WithMany()
-                        .HasForeignKey("ModifiederId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("Creater");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifieder");
-                });
-
-            modelBuilder.Entity("OnlineShopProject.WebApi.Domain.Entities.RoleEntity.Role", b =>
-                {
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Creater")
-                        .WithMany()
-                        .HasForeignKey("CreaterId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Modifieder")
-                        .WithMany()
-                        .HasForeignKey("ModifiederId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("Creater");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifieder");
-                });
-
-            modelBuilder.Entity("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", b =>
-                {
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Creater")
-                        .WithMany()
-                        .HasForeignKey("CreaterId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Deleter")
-                        .WithMany()
-                        .HasForeignKey("DeleterId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("OnlineShopProject.WebApi.Domain.Entities.UserEntity.User", "Modifieder")
-                        .WithMany()
-                        .HasForeignKey("ModifiederId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("Creater");
-
-                    b.Navigation("Deleter");
-
-                    b.Navigation("Modifieder");
                 });
 
             modelBuilder.Entity("OnlineShopProject.WebApi.Domain.Entities.OrderEntity.Entity.Order", b =>
