@@ -15,7 +15,7 @@ namespace OnlineShopProject.WebApi.Infrastructure.Repositories.Interface
 
        RoleManager<Role> _roleManager { get; }
 
-        Task SaveAsync();
+        Task<int> SaveAsync();
 
     }
 }

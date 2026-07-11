@@ -23,9 +23,9 @@ namespace OnlineShopProject.WebApi.Infrastructure.Repositories.Implementation
 
         public RoleManager<Role> _roleManager { get; set; }
 
-        public async Task SaveAsync()
+        public async Task<int> SaveAsync()
         {
-           await _applicationDb.SaveChangesAsync();
+            return await _applicationDb.SaveChangesAsync();
         }
     }
 }
