@@ -1,5 +1,6 @@
 ﻿using OnlineShopProject.WebApi.Business.Contracts.Dto.Command;
 using OnlineShopProject.WebApi.Business.Contracts.Dto.Query;
+using OnlineShopProject.WebApi.Business.Exceptions;
 using OnlineShopProject.WebApi.Business.Services.Interface;
 using OnlineShopProject.WebApi.Domain.Common.Paginations;
 using OnlineShopProject.WebApi.Domain.Entities.ProductEntity.Entity;
