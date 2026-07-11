@@ -8,9 +8,9 @@ public interface IOrderService
 {
     Task CreateAsync(Guid userId,OrderItem initOrderItem,Guid? createrId=null);
 
-    Task<Pagination<ProductQuery>> GetAllAsync(int page, int pageSize);
+    Task<Pagination<OrderQuery>> GetAllAsync(int page, int pageSize);
 
-    Task<Pagination<ProductQuery>> GetUserOrdersAsync(int page, int pageSize);
+    Task<Pagination<OrderQuery>> GetUserOrdersAsync(Guid userId,int page, int pageSize);
 
 
 }
