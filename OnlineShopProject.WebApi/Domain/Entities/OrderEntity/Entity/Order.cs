@@ -32,6 +32,12 @@ public class Order : BaseEntity
         DeliveryDate = deliveryDate;
     }
 
+    public void UpdatePrice(decimal request)
+    {
+        TotalPrice=+ request;
+    }
+
+
     public void ChangeStatus(Status status)
     {
         Status = status;
