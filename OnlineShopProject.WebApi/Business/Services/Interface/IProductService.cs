@@ -11,4 +11,9 @@ public interface IProductService
 
     Task<Pagination<ProductQuery>> GetAllAsync(int page,int pageSize);
 
+    Task<bool> RemoveProductAsync(Guid productId,Guid deleterId);
+
+    Task<bool> UpdateProductPriceAsync(Guid productId,decimal newPrice,Guid modifiedId);
+    Task<bool> UpdateProductStockAsync(Guid productId,int stock,Guid modifiedId);
+
 }

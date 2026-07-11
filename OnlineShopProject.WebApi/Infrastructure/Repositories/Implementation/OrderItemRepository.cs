@@ -4,10 +4,9 @@ using OnlineShopProject.WebApi.Infrastructure.Repositories.Interface;
 
 namespace OnlineShopProject.WebApi.Infrastructure.Repositories.Implementation;
 
-public class OrderRepository : GenericRepository<Order>, IOrderRepository
+public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepository
 {
-    public OrderRepository(ApplicationDbContext applicationDb) : base(applicationDb)
+    public OrderItemRepository(ApplicationDbContext applicationDb) : base(applicationDb)
     {
     }
-
 }

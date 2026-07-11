@@ -44,6 +44,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 
     public async Task<Pagination<TResult>>  QueryAsync<TResult>(Expression<Func<T, bool>> condition, Expression<Func<T, TResult>> perdicate, int page = 1, int pageSize = 10)
     {
+        pageSize= pageSize>50?50:pageSize;
+
         var query = _repo.AsQueryable().AsNoTracking();
 
           query = query

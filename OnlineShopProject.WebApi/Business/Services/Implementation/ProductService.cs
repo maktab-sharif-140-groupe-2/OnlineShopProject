@@ -1,5 +1,6 @@
 ﻿using OnlineShopProject.WebApi.Business.Contracts.Dto.Command;
 using OnlineShopProject.WebApi.Business.Contracts.Dto.Query;
+using OnlineShopProject.WebApi.Business.Exceptions;
 using OnlineShopProject.WebApi.Business.Services.Interface;
 using OnlineShopProject.WebApi.Domain.Common.Paginations;
 using OnlineShopProject.WebApi.Domain.Entities.ProductEntity.Entity;
@@ -40,8 +41,48 @@ public class ProductService : IProductService
             Name = x.Name,
             Price = x.Price,
         }, page, pageSize);
-
         return result;
+    }
 
+    public async Task<bool> RemoveProductAsync(Guid productId,Guid deleterId)
+    {
+        var product=await _unitOfWork.ProductRepository.GetEntityByIdAsync(productId);
+
+        if (product == null)
+            throw new NotFoundException("the product not exist in system");
+
+        await _unitOfWork.ProductRepository.DeleteAsync(product, deleterId);
+
+        await _unitOfWork.SaveAsync();
+
+        return true;
+    }
+
+    public async Task<bool> UpdateProductPriceAsync(Guid productId, decimal newPrice,Guid modifiederId)
+    {
+        var product = await _unitOfWork.ProductRepository.GetEntityByIdAsync(productId);
+
+        if (product == null)
+            throw new NotFoundException("the product not exist in system");
+
+        await _unitOfWork.ProductRepository.UpdatePriceAsync(product,newPrice ,modifiederId);
+
+        await _unitOfWork.SaveAsync();
+
+        return true;
+    }
+
+    public async Task<bool> UpdateProductStockAsync(Guid productId, int stock, Guid modifierId)
+    {
+        var product = await _unitOfWork.ProductRepository.GetEntityByIdAsync(productId);
+
+        if (product == null)
+            throw new NotFoundException("the product not exist in system");
+
+        await _unitOfWork.ProductRepository.UpdateStockAsync(product, stock, modifierId);
+
+        await _unitOfWork.SaveAsync();
+
+        return true;
     }
 }
