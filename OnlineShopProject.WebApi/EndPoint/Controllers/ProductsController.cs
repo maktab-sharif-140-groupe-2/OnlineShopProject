@@ -31,6 +31,28 @@ namespace OnlineShopProject.WebApi.EndPoint.Controllers
             var result= await _productService.GetAllAsync(pageNumber, size);
             return result;
         }
+
+        [HttpDelete("Remove")]
+        public async Task<ActionResult<bool>> RemoveProduct(Guid productId, Guid deleterId)
+        {
+            var result=await _productService.RemoveProductAsync(productId, deleterId);
+            return result;
+        }
+
+        [HttpPatch("UpdatePrice")]
+        public async Task<ActionResult<bool>> UpdatePrice(UpdatePriceRequest updatePrice)
+        {
+            var result = await _productService.UpdateProductPriceAsync(updatePrice.ProductId, updatePrice.NewPrice, updatePrice.ModifiederId);
+            return result;
+
+        }
+
+        [HttpPatch("UpdateStock")]
+        public async Task<ActionResult<bool>> UpdateStock(UpdateStockRequest updateStock)
+        {
+            var result = await _productService.UpdateProductStockAsync(updateStock.productId,updateStock.stock,updateStock.modifierId);
+            return result;
+        }
       
     }
 }
