@@ -22,5 +22,7 @@ namespace OnlineShopProject.WebApi.Business.Services.Interface
         Task<bool> AddClaimToUserAsync(AddClaimToUserCommand addClaimToUserCommand);
 
         Task<bool> ChangePasswordAsync(ChangePasswordCommand changePasswordCommand);
+
+        Task ToPerimum(Guid userId,Guid requesterId);
     }
 }

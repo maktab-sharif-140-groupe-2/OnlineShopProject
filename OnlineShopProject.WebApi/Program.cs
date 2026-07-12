@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OnlineShopProject.WebApi.Authentications.Constants;
 using OnlineShopProject.WebApi.Business.Contracts.JwtSetting;
 using OnlineShopProject.WebApi.Business.Extensions;
 using OnlineShopProject.WebApi.Business.Services.Implementation;
@@ -97,6 +98,22 @@ builder.Services.AddAuthentication(options =>
         TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.EncryptKey)),
     };
 });
+
+builder.Services.AddAuthorization(op =>
+{
+    op.AddPolicy("FreeUser", policy => policy.RequireClaim(ClaimConstants.ReadProduct.Type,ClaimConstants.ReadProduct.Value)
+    .RequireClaim(ClaimConstants.CreateOrder.Type, ClaimConstants.CreateOrder.Value));
+
+    op.AddPolicy("PermiumUser", policy => policy.RequireClaim(ClaimConstants.ReadProduct.Type,ClaimConstants.ReadProduct.Value)
+    .RequireClaim(ClaimConstants.CreateOrder.Type, ClaimConstants.CreateOrder.Value)
+    .RequireClaim(ClaimConstants.CreateOrder.Type, ClaimConstants.CreateOrder.Value));
+
+}
+
+
+
+);
+
 
 var app = builder.Build();
 await app.SeedDataBaseAsync();

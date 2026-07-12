@@ -18,7 +18,7 @@ public class User : IdentityUser<Guid>, IEntity
         PhoneNumber = phoneNumber;
         UserName = Email;
         Plan = Plan.Free;
-        Status = Status.Active;
+        Status = BanStatus.Active;
         CreaterId= createrId;
     }
 
@@ -29,7 +29,9 @@ public class User : IdentityUser<Guid>, IEntity
     public List<Order> Orders { get; private set; } = [];
 
     public Plan Plan { get; private set; }
-    public Status Status { get; private set; }
+    public BanStatus Status { get; private set; }
+
+    public DateTime? BanTime { get; set; }
 
     public DateOnly? LastPermium { get; private set; }
 
@@ -60,18 +62,32 @@ public class User : IdentityUser<Guid>, IEntity
     }
     public void ToFreePlan()
     {
-        Plan = Plan.Free;
-        LastPermium = null;
+        if (Plan==Plan.Pro&&LastPermium!=null&&LastPermium.Value.AddDays(30)< DateOnly.FromDateTime(DateTime.UtcNow))
+        {
+           LastPermium = null;
+           Plan = Plan.Free;
+        }
+
     }
     public void Banning(Guid modifiederId)
     {
-        Status = Status.Banned;
+        Status = BanStatus.Banned;
+        BanTime = DateTime.UtcNow;
         Update(modifiederId);
     }
     public void UnBanning(Guid modifiederId)
     {
-        Status = Status.Active;
+        Status = BanStatus.Active;
+        BanTime = null;
         Update(modifiederId);   
+    }
+    public void UnBanning()
+    {
+        if (BanTime != null && BanTime.Value.AddDays(20) < DateTime.UtcNow)
+        {
+        Status = BanStatus.Active;
+        BanTime = null;
+        }
     }
     public void SoftDelete()
     {

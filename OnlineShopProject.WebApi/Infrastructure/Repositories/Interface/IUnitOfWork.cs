@@ -4,7 +4,7 @@ using OnlineShopProject.WebApi.Domain.Entities.UserEntity;
 
 namespace OnlineShopProject.WebApi.Infrastructure.Repositories.Interface;
 
-public interface IUnitOfWork
+public interface IUnitOfWork 
 {
     IProductRepository ProductRepository { get; }
     IOrderRepository OrderRepository { get; }
@@ -13,10 +13,13 @@ public interface IUnitOfWork
 
     SignInManager<User> _signInManager { get; }
 
-   RoleManager<Role> _roleManager { get; }
+    RoleManager<Role> _roleManager { get; }
 
     IOrderItemRepository OrderItemRepository { get;   }
 
-        Task<int> SaveAsync();
+    Task BeginTransactionAsync();
+    Task CommitTransactionAsync();
+    Task RollBackTransactionAsync();
+    Task<int> SaveAsync();
 
 }

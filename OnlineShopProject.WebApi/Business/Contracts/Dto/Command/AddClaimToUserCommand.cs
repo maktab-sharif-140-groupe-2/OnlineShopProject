@@ -1,4 +1,4 @@
 ﻿namespace OnlineShopProject.WebApi.Business.Contracts.Dto.Command;
 
-public record AddClaimToUserCommand(Guid UserId, string claimType, string claimValue, Guid RequesterId);
+public record AddClaimToUserCommand(Guid UserId, string ClaimType, string ClaimValue, Guid RequesterId);
 

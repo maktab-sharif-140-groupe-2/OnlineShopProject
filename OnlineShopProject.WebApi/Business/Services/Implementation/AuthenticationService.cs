@@ -5,8 +5,11 @@ using OnlineShopProject.WebApi.Business.Contracts.Dto.Command;
 using OnlineShopProject.WebApi.Business.Contracts.Dto.Query;
 using OnlineShopProject.WebApi.Business.Contracts.JwtSetting;
 using OnlineShopProject.WebApi.Business.Services.Interface;
+using OnlineShopProject.WebApi.Domain.Entities.OrderEntity.Enums;
 using OnlineShopProject.WebApi.Domain.Entities.UserEntity;
+using OnlineShopProject.WebApi.Domain.Entities.UserEntity.Enums;
 using OnlineShopProject.WebApi.Infrastructure.Repositories.Interface;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -19,32 +22,50 @@ public class AuthenticationService : IAuthenticationService
 
     private readonly IUnitOfWork _unitOfWork;
 
-    public AuthenticationService(IUnitOfWork unitOfWork, IOptions<JwtSettings> options)
+    private readonly ICurrentUser _currentUser;
+
+    public AuthenticationService(IUnitOfWork unitOfWork, IOptions<JwtSettings> options, ICurrentUser currentUser)
     {
         _unitOfWork = unitOfWork;
         _jwtSettings = options.Value;
+        _currentUser = currentUser;
     }
 
     public async Task<Guid> RegisterAsync(RegisterCommand registerRequest)
     {
         var duplicateUserName = await _unitOfWork.UserManager.FindByEmailAsync(registerRequest.Email);
-
         if (duplicateUserName is not null)
             throw new InvalidOperationException("the user with this email is already exist");
 
-        var user = new User(registerRequest.FullName, registerRequest.Age, registerRequest.Email, registerRequest.PhoneNumber);
+        try
+        {
+            await _unitOfWork.BeginTransactionAsync();
+            var user = new User(registerRequest.FullName, registerRequest.Age, registerRequest.Email, registerRequest.PhoneNumber,_currentUser.UserId);
 
-        var createUserResult = await _unitOfWork.UserManager.CreateAsync(user, registerRequest.Password);
+            var createUserResult = await _unitOfWork.UserManager.CreateAsync(user, registerRequest.Password);
 
-        if (!createUserResult.Succeeded)
-            throw new InvalidOperationException(createUserResult.Errors.FirstOrDefault()?.Description ?? "Registration failed.");
+            if (!createUserResult.Succeeded)
+                throw new InvalidOperationException(createUserResult.Errors.FirstOrDefault()?.Description ?? "Registration failed.");
 
-        var addRoleResult = await _unitOfWork.UserManager.AddToRoleAsync(user, RoleConstants.UserRoleName);
+            var addRoleResult = await _unitOfWork.UserManager.AddToRoleAsync(user, RoleConstants.UserRoleName);
 
-        if (!addRoleResult.Succeeded)
-            throw new InvalidOperationException(createUserResult.Errors.FirstOrDefault()?.Description ?? "Registration failed.");
 
-        return user.Id;
+            if (!addRoleResult.Succeeded)
+                throw new InvalidOperationException(addRoleResult.Errors.FirstOrDefault()?.Description ?? "Registration failed.");
+
+            await _unitOfWork.CommitTransactionAsync();
+
+            return user.Id;
+
+        }
+        catch (Exception ex)
+        {
+            await _unitOfWork.RollBackTransactionAsync();
+
+            throw new ValidationException(ex.Message);
+ 
+        }
+
     }
 
     public async Task<TokenLoginQuery> TokenLoginAsync(LoginCommand loginRequest)
@@ -64,6 +85,15 @@ public class AuthenticationService : IAuthenticationService
 
         if (foundedUser is null)
             throw new InvalidOperationException("peida nashodi azizam");
+
+        foundedUser.UnBanning();
+
+        foundedUser.ToFreePlan();
+
+        await _unitOfWork.UserManager.UpdateAsync(foundedUser);
+
+        if (foundedUser.Status == BanStatus.Banned)
+            throw new BaningException($"The User With Id {foundedUser.Id} Is Ban Until {foundedUser.BanTime!.Value.AddDays(20)-DateTime.Now}");
 
         return await GenerateTokenAsync(foundedUser);
     }

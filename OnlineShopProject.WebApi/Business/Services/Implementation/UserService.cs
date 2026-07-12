@@ -9,7 +9,6 @@ using OnlineShopProject.WebApi.EndPoint.Dto.RequestDto;
 using OnlineShopProject.WebApi.EndPoint.Dto.ResponseDto;
 using OnlineShopProject.WebApi.Infrastructure.Repositories.Interface;
 using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace OnlineShopProject.WebApi.Business.Services.Implementation
 {
@@ -17,9 +16,12 @@ namespace OnlineShopProject.WebApi.Business.Services.Implementation
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IUnitOfWork unitOfWork)
+        private readonly ICurrentUser _currentUser;
+
+        public UserService(IUnitOfWork unitOfWork, ICurrentUser currentUser)
         {
             _unitOfWork = unitOfWork;
+            _currentUser = currentUser;
         }
 
         public async Task<bool> AddClaimToUserAsync(AddClaimToUserCommand addClaimToUserCommand)
@@ -33,12 +35,12 @@ namespace OnlineShopProject.WebApi.Business.Services.Implementation
 
             var userClaims = await _unitOfWork.UserManager.GetClaimsAsync(foundedUser);
 
-            var existClaim = userClaims.Any(uc => uc.Type == addClaimToUserCommand.claimType && uc.Value == addClaimToUserCommand.claimValue);
+            var existClaim = userClaims.Any(uc => uc.Type == addClaimToUserCommand.ClaimType && uc.Value == addClaimToUserCommand.ClaimValue);
 
             if (existClaim)
                 throw new ConflictException("the claim is exist!!");
 
-            var claim = new Claim(addClaimToUserCommand.claimType, addClaimToUserCommand.claimValue);
+            var claim = new Claim(addClaimToUserCommand.ClaimType, addClaimToUserCommand.ClaimValue);
 
             var result = await _unitOfWork.UserManager.AddClaimAsync(foundedUser, claim);
 
@@ -49,7 +51,7 @@ namespace OnlineShopProject.WebApi.Business.Services.Implementation
         {
             var foundedUser = await AssignOwnerForBanningAndUnbanningAsync(userId, requesterId);
 
-            if (foundedUser.Status == Domain.Entities.UserEntity.Enums.Status.Banned)
+            if (foundedUser.Status == Domain.Entities.UserEntity.Enums.BanStatus.Banned)
                 throw new InvalidOperationException("برادر چی میزنی ؟؟ به مام بده جنست خوبه");
 
             foundedUser.Banning(requesterId);
@@ -142,11 +144,25 @@ namespace OnlineShopProject.WebApi.Business.Services.Implementation
                 , userRoles.Count());
         }
 
+        public async Task ToPerimum(Guid userId,Guid requesterId)
+        {
+          var user=  await _unitOfWork.UserManager.FindByIdAsync(userId.ToString());
+
+            if(user is null)
+                throw new NotFoundException($"{nameof(user)}.");
+
+            user.ToProPlan();
+
+            await _unitOfWork.UserManager.AddClaimAsync(user,ClaimConstants.VipFeature);
+
+            await _unitOfWork.UserManager.UpdateAsync(user);
+        }
+
         public async Task<bool> UnBanUserAsync(Guid userId, Guid requesterId)
         {
             var foundedUser = await AssignOwnerForBanningAndUnbanningAsync(userId, requesterId);
 
-            if (foundedUser.Status != Domain.Entities.UserEntity.Enums.Status.Banned)
+            if (foundedUser.Status != Domain.Entities.UserEntity.Enums.BanStatus.Banned)
                 throw new InvalidOperationException("برادر چی میزنی ؟؟ به مام بده جنست خوبه");
 
             foundedUser.UnBanning(requesterId);
@@ -188,5 +204,7 @@ namespace OnlineShopProject.WebApi.Business.Services.Implementation
             if (!requesterRoles.Contains(RoleConstants.AdminRoleName))
                 throw new PermissionDeniedException("you must be the admin in the system");
         }
+
+
     }
 }
