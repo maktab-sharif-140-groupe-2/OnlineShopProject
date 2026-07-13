@@ -12,8 +12,8 @@ using OnlineShopProject.WebApi.Infrastructure.Data;
 namespace OnlineShopProject.WebApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260711131213_RealationbeetwinLogPrincipal")]
-    partial class RealationbeetwinLogPrincipal
+    [Migration("20260713022742_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,6 +159,9 @@ namespace OnlineShopProject.WebApi.Migrations
 
                     b.Property<Guid?>("ModifiederId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(16,2)");
@@ -355,6 +358,9 @@ namespace OnlineShopProject.WebApi.Migrations
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("BanTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

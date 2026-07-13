@@ -157,6 +157,9 @@ namespace OnlineShopProject.WebApi.Migrations
                     b.Property<Guid?>("ModifiederId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(16,2)");
 
@@ -352,6 +355,9 @@ namespace OnlineShopProject.WebApi.Migrations
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("BanTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

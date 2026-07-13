@@ -40,6 +40,8 @@ builder.Services.AddIdentity<User, Role>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
@@ -74,6 +76,8 @@ builder.Services.AddSwaggerGen(option =>
 });
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IUserService, UserService>();
 var jwtSettings = builder.Configuration.GetSection("JwtConfigurations").Get<JwtSettings>()!;
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtConfigurations"));
 builder.Services.AddAuthentication(options =>
@@ -101,13 +105,35 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(op =>
 {
-    op.AddPolicy("FreeUser", policy => policy.RequireClaim(ClaimConstants.ReadProduct.Type,ClaimConstants.ReadProduct.Value)
+    op.AddPolicy("ApplicationLogic", policy => policy
+    .RequireClaim(ClaimConstants.ReadProducts.Type, ClaimConstants.ReadProducts.Value)
     .RequireClaim(ClaimConstants.CreateOrder.Type, ClaimConstants.CreateOrder.Value));
 
-    op.AddPolicy("PermiumUser", policy => policy.RequireClaim(ClaimConstants.ReadProduct.Type,ClaimConstants.ReadProduct.Value)
-    .RequireClaim(ClaimConstants.CreateOrder.Type, ClaimConstants.CreateOrder.Value)
-    .RequireClaim(ClaimConstants.CreateOrder.Type, ClaimConstants.CreateOrder.Value));
+    op.AddPolicy("CanReadUserOrders", policy => policy
+    .RequireClaim(ClaimConstants.VipFeature.Type, ClaimConstants.VipFeature.Value));
 
+    op.AddPolicy("CanDeleteProduct", policy => policy
+         .RequireClaim(ClaimConstants.DeleteProduct.Type, ClaimConstants.DeleteProduct.Value));
+
+    op.AddPolicy("CanUpdateProduct", policy => policy
+         .RequireClaim(ClaimConstants.ChangeProduct.Type, ClaimConstants.ChangeProduct.Value));
+
+    op.AddPolicy("CanCreateProduct", policy => policy
+         .RequireClaim(ClaimConstants.CreateProduct.Type, ClaimConstants.CreateProduct.Value));
+
+    op.AddPolicy("CanDeleteProduct", policy => policy
+         .RequireClaim(ClaimConstants.DeleteProduct.Type, ClaimConstants.DeleteProduct.Value));
+
+    op.AddPolicy("CanReadOrders", policy => policy
+         .RequireClaim(ClaimConstants.ReadOrders.Type, ClaimConstants.ReadOrders.Value));
+
+    op.AddPolicy("FullAdminPermission", policy => policy
+         .RequireClaim(ClaimConstants.CreateOrder.Type, ClaimConstants.CreateOrder.Value)
+         .RequireClaim(ClaimConstants.DeleteProduct.Type, ClaimConstants.DeleteProduct.Value)
+         .RequireClaim(ClaimConstants.ChangeProduct.Type, ClaimConstants.ChangeProduct.Value)
+         .RequireClaim(ClaimConstants.CreateProduct.Type, ClaimConstants.CreateProduct.Value)
+         .RequireClaim(ClaimConstants.ReadProducts.Type, ClaimConstants.ReadProducts.Value)
+         .RequireClaim(ClaimConstants.ReadOrders.Type, ClaimConstants.ReadOrders.Value));
 }
 
 

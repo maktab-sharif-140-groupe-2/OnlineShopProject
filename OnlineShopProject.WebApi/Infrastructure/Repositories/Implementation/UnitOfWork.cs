@@ -9,12 +9,15 @@ namespace OnlineShopProject.WebApi.Infrastructure.Repositories.Implementation
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public UnitOfWork(ApplicationDbContext applicationDb)
+        public UnitOfWork(ApplicationDbContext applicationDb, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
         {
             _applicationDb = applicationDb;
             ProductRepository = new ProductRepository(applicationDb);
             OrderRepository = new OrderRepository(applicationDb);
-            OrderItemRepository=new OrderItemRepository(applicationDb);
+            OrderItemRepository = new OrderItemRepository(applicationDb);
+            UserManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
         }
         private readonly ApplicationDbContext _applicationDb;
 

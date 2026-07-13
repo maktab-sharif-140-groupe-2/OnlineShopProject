@@ -1,4 +1,5 @@
-﻿using OnlineShopProject.WebApi.Business.Contracts.Dto.Query;
+﻿using OnlineShopProject.WebApi.Business.Contracts.Dto.Command;
+using OnlineShopProject.WebApi.Business.Contracts.Dto.Query;
 using OnlineShopProject.WebApi.Business.Exceptions;
 using OnlineShopProject.WebApi.Business.Services.Interface;
 using OnlineShopProject.WebApi.Domain.Common.Paginations;
@@ -17,34 +18,34 @@ public class OrderService : IOrderService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task CreateAsync(Guid userId, OrderItem initOrderItem, Guid? createrId = null)
+    public async Task CreateAsync(CreateOrderCommand createOrderCommand, Guid? createrId = null)
     {
-        var user = await _unitOfWork.UserManager.FindByIdAsync(userId.ToString());
+        var user = await _unitOfWork.UserManager.FindByIdAsync(createOrderCommand.UserId.ToString());
+
         if (user == null)
             throw new NotFoundException("not exist the user in system");
 
-        
-        var inspection= await _unitOfWork.OrderRepository
-            .ExsitingAsync(o=> o.UserId == userId && o.Status==Status.Pending|| o.Status == Status.Payment_Stage);
-
-        if (inspection)
-            throw new InvalidCreateOrderException("the user have a unhanled order");
-
-        var order = new Order(userId, createrId);
-
-        await _unitOfWork.OrderRepository.AddEntityAsync(order);
-
-        var product = await _unitOfWork.ProductRepository.GetEntityByIdAsync(initOrderItem.ProductId);
+        var product = await _unitOfWork.ProductRepository.GetEntityByIdAsync(createOrderCommand.ProductId);
 
         if (product == null)
             throw new NotFoundException("the product not exist in system");
 
-        if (product.Stock + initOrderItem.Quantity < 0)
+        if (product.Stock + createOrderCommand.Quantity < 0)
             throw new InvalidQuantityException("product stock is not enough");
 
-        var orderItem = new OrderItem(order.Id, initOrderItem.ProductId, initOrderItem.Quantity,createrId);
+        var inspection = await _unitOfWork.OrderRepository
+            .ExsitingAsync(o => o.UserId == createOrderCommand.UserId && o.Status == Status.Pending || o.Status == Status.Payment_Stage);
 
-         order.UpdatePrice(product.Price* initOrderItem.Quantity);
+        if (inspection)
+            throw new InvalidCreateOrderException("the user have a unhanled order");
+
+        var order = new Order(createOrderCommand.UserId, createrId);
+
+        await _unitOfWork.OrderRepository.AddEntityAsync(order);
+
+        var orderItem = new OrderItem(order.Id, createOrderCommand.ProductId, createOrderCommand.Quantity, createrId);
+
+        order.UpdatePrice(product.Price * createOrderCommand.Quantity);
 
         await _unitOfWork.OrderItemRepository.AddEntityAsync(orderItem);
 
@@ -55,24 +56,24 @@ public class OrderService : IOrderService
     {
         var result = await _unitOfWork.OrderRepository.QueryAsync(x => true, x => new OrderQuery
         {
-            TotalPrice=x.TotalPrice,
-            Status=x.Status.ToString(),
-            DeliveryDate=x.DeliveryDate,
-            OrdererName=x.User.FullName,
-            Items=x.Items.Select(p=> new ProductQuery
+            TotalPrice = x.TotalPrice,
+            Status = x.Status.ToString(),
+            DeliveryDate = x.DeliveryDate,
+            OrdererName = x.User.FullName,
+            Items = x.Items.Select(p => new ProductQuery
             {
-                BrandName=p.Product.BrandName,
-                Name=p.Product.Name,
-                Price=p.Product.Price
+                BrandName = p.Product.BrandName,
+                Name = p.Product.Name,
+                Price = p.Product.Price
             }).ToList()
         }, page, pageSize);
 
         return result;
     }
 
-    public async Task<Pagination<OrderQuery>> GetUserOrdersAsync(Guid userId,int page, int pageSize)
+    public async Task<Pagination<OrderQuery>> GetUserOrdersAsync(Guid userId, int page, int pageSize)
     {
-        var result = await _unitOfWork.OrderRepository.QueryAsync(x => x.UserId==userId, x => new OrderQuery
+        var result = await _unitOfWork.OrderRepository.QueryAsync(x => x.UserId == userId, x => new OrderQuery
         {
             TotalPrice = x.TotalPrice,
             Status = x.Status.ToString(),

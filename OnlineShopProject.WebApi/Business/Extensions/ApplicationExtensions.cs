@@ -26,13 +26,14 @@ public static class ApplicationExtensions
         await roleManager.CreateAsync(adminRole);
         await roleManager.CreateAsync(userRole);
 
-        await roleManager.AddClaimAsync(userRole, ClaimConstants.ReadProduct);
+        await roleManager.AddClaimAsync(userRole, ClaimConstants.ReadProducts);
         await roleManager.AddClaimAsync(userRole, ClaimConstants.CreateOrder);
+        await roleManager.AddClaimAsync(adminRole, ClaimConstants.CreateOrder);
         await roleManager.AddClaimAsync(adminRole, ClaimConstants.CreateProduct);
         await roleManager.AddClaimAsync(adminRole, ClaimConstants.ChangeProduct);
         await roleManager.AddClaimAsync(adminRole, ClaimConstants.DeleteProduct);
-        await roleManager.AddClaimAsync(adminRole, ClaimConstants.ReadProduct);
-        await roleManager.AddClaimAsync(adminRole, ClaimConstants.ReadOrder);
+        await roleManager.AddClaimAsync(adminRole, ClaimConstants.ReadProducts);
+        await roleManager.AddClaimAsync(adminRole, ClaimConstants.ReadOrders);
     }   
 
     private static async Task SeedAdminsAsync(IServiceProvider serviceProvider)

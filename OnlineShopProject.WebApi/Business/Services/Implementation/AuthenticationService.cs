@@ -40,7 +40,7 @@ public class AuthenticationService : IAuthenticationService
         try
         {
             await _unitOfWork.BeginTransactionAsync();
-            var user = new User(registerRequest.FullName, registerRequest.Age, registerRequest.Email, registerRequest.PhoneNumber,_currentUser.UserId);
+            var user = new User(registerRequest.FullName, registerRequest.Age, registerRequest.Email, registerRequest.PhoneNumber, _currentUser.UserId);
 
             var createUserResult = await _unitOfWork.UserManager.CreateAsync(user, registerRequest.Password);
 
@@ -48,7 +48,6 @@ public class AuthenticationService : IAuthenticationService
                 throw new InvalidOperationException(createUserResult.Errors.FirstOrDefault()?.Description ?? "Registration failed.");
 
             var addRoleResult = await _unitOfWork.UserManager.AddToRoleAsync(user, RoleConstants.UserRoleName);
-
 
             if (!addRoleResult.Succeeded)
                 throw new InvalidOperationException(addRoleResult.Errors.FirstOrDefault()?.Description ?? "Registration failed.");
@@ -63,7 +62,7 @@ public class AuthenticationService : IAuthenticationService
             await _unitOfWork.RollBackTransactionAsync();
 
             throw new ValidationException(ex.Message);
- 
+
         }
 
     }
@@ -88,12 +87,15 @@ public class AuthenticationService : IAuthenticationService
 
         foundedUser.UnBanning();
 
-        foundedUser.ToFreePlan();
+        var updateUserPlanResult = foundedUser.ToFreePlan();
+
+        if (updateUserPlanResult)
+            await _unitOfWork.UserManager.RemoveClaimAsync(foundedUser, ClaimConstants.VipFeature);
 
         await _unitOfWork.UserManager.UpdateAsync(foundedUser);
 
         if (foundedUser.Status == BanStatus.Banned)
-            throw new BaningException($"The User With Id {foundedUser.Id} Is Ban Until {foundedUser.BanTime!.Value.AddDays(20)-DateTime.Now}");
+            throw new BaningException($"The User With Id {foundedUser.Id} Is Ban Until {foundedUser.BanTime!.Value.AddDays(20) - DateTime.Now}");
 
         return await GenerateTokenAsync(foundedUser);
     }

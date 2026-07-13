@@ -10,7 +10,7 @@ public class User : IdentityUser<Guid>, IEntity
 {
     private User() { }
 
-    public User(string fullName, int age, string email, string phoneNumber,Guid? createrId=null)
+    public User(string fullName, int age, string email, string phoneNumber, Guid? createrId = null)
     {
         FullName = fullName;
         Age = age;
@@ -19,7 +19,7 @@ public class User : IdentityUser<Guid>, IEntity
         UserName = Email;
         Plan = Plan.Free;
         Status = BanStatus.Active;
-        CreaterId= createrId;
+        CreaterId = createrId;
     }
 
     public string FullName { get; set; }
@@ -43,11 +43,11 @@ public class User : IdentityUser<Guid>, IEntity
 
     public bool IsDeleted { get; set; }
 
-    public Guid? CreaterId { get;  set; }
+    public Guid? CreaterId { get; set; }
 
-    public Guid? ModifiederId { get;  set; }
+    public Guid? ModifiederId { get; set; }
 
-    public Guid? DeleterId { get;  set; }
+    public Guid? DeleterId { get; set; }
 
     public User? Creater { get; set; }
 
@@ -58,16 +58,18 @@ public class User : IdentityUser<Guid>, IEntity
     public void ToProPlan()
     {
         Plan = Plan.Pro;
-        LastPermium=DateOnly.FromDateTime(DateTime.UtcNow);
+        LastPermium = DateOnly.FromDateTime(DateTime.UtcNow);
     }
-    public void ToFreePlan()
+    public bool ToFreePlan()
     {
-        if (Plan==Plan.Pro&&LastPermium!=null&&LastPermium.Value.AddDays(30)< DateOnly.FromDateTime(DateTime.UtcNow))
+        if (Plan == Plan.Pro && LastPermium != null && LastPermium.Value.AddDays(30) < DateOnly.FromDateTime(DateTime.UtcNow))
         {
-           LastPermium = null;
-           Plan = Plan.Free;
+            LastPermium = null;
+            Plan = Plan.Free;
+            return true;
         }
 
+        return false;
     }
     public void Banning(Guid modifiederId)
     {
@@ -79,14 +81,14 @@ public class User : IdentityUser<Guid>, IEntity
     {
         Status = BanStatus.Active;
         BanTime = null;
-        Update(modifiederId);   
+        Update(modifiederId);
     }
     public void UnBanning()
     {
         if (BanTime != null && BanTime.Value.AddDays(20) < DateTime.UtcNow)
         {
-        Status = BanStatus.Active;
-        BanTime = null;
+            Status = BanStatus.Active;
+            BanTime = null;
         }
     }
     public void SoftDelete()
@@ -99,14 +101,14 @@ public class User : IdentityUser<Guid>, IEntity
 
     public void SoftDelete(Guid deleterId)
     {
-        DeleterId= deleterId;
+        DeleterId = deleterId;
         IsDeleted = true;
-        DeletedAt= DateTime.UtcNow;
+        DeletedAt = DateTime.UtcNow;
     }
 
     public void Update(Guid modifiederId)
     {
         ModifiedAt = DateTime.UtcNow;
-        ModifiederId= modifiederId;
+        ModifiederId = modifiederId;
     }
 }
