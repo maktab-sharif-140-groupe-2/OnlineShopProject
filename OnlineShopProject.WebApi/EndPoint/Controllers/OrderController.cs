@@ -23,7 +23,7 @@ namespace OnlineShopProject.WebApi.EndPoint.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "ApplicationLogic")]
+        //[Authorize(Policy = "ApplicationLogic")]
         public async Task<IActionResult> Create([FromBody] CreateOrderRequestDto createOrderRequest)
         {
             await _orderService.CreateAsync(createOrderRequest.ToRequestDto(), _currentUser.UserId);
@@ -32,7 +32,7 @@ namespace OnlineShopProject.WebApi.EndPoint.Controllers
         }
 
         [HttpGet("Orders")]
-        [Authorize(Policy = "CanReadOrders")]
+        //[Authorize(Policy = "CanReadOrders")]
         public async Task<ActionResult<Pagination<OrderQuery>>> GetAll(int page, int pageSize)
         {
             var result = await _orderService.GetAllAsync(page, pageSize);
@@ -40,7 +40,7 @@ namespace OnlineShopProject.WebApi.EndPoint.Controllers
         }
 
         [HttpGet("Orders{userId:Guid}")]
-        [Authorize(Policy = "CanReadUserOrders")]
+        //[Authorize(Policy = "CanReadUserOrders")]
         public async Task<ActionResult<Pagination<OrderQuery>>> GetUserOrder([FromRoute] Guid userId, int page, int pageSize)
         {
             var result = await _orderService.GetUserOrdersAsync(userId, page, pageSize);

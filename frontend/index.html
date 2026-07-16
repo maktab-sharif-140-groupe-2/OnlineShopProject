@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Shop - Dashboard</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/utilities.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="page-content">
+    <div class="page-header">
+      <h2>Dashboard</h2>
+    </div>
+    <div class="grid-3">
+      <div class="card stat-card">
+        <div class="stat-value" id="stat-status">-</div>
+        <div class="stat-label">Auth Status</div>
+      </div>
+    </div>
+    <div class="card mt-2">
+      <div class="card-header">
+        <h3>Quick Actions</h3>
+      </div>
+      <div class="card-body">
+        <div class="flex-row flex-wrap">
+          <a href="pages/products.html" class="btn btn-primary">View Products</a>
+          <a href="pages/product-create.html" class="btn btn-success">Add Product</a>
+          <a href="pages/orders.html" class="btn btn-outline">View Orders</a>
+          <a href="pages/order-create.html" class="btn btn-outline">Create Order</a>
+        </div>
+      </div>
+    </div>
+    <div class="card mt-2">
+      <div class="card-header">
+        <h3>API Endpoints</h3>
+      </div>
+      <div class="card-body">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Auth</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge badge-success">POST</span></td><td>/api/Authentication/Login</td><td>Login</td><td>Public</td></tr>
+              <tr><td><span class="badge badge-success">POST</span></td><td>/api/Authentication/Register</td><td>Register</td><td>Public</td></tr>
+              <tr><td><span class="badge badge-secondary">GET</span></td><td>/api/Products</td><td>List products</td><td>ApplicationLogic</td></tr>
+              <tr><td><span class="badge badge-success">POST</span></td><td>/api/Products</td><td>Create product</td><td>CanCreateProduct</td></tr>
+              <tr><td><span class="badge badge-danger">DELETE</span></td><td>/api/Products/Remove</td><td>Delete product</td><td>CanDeleteProduct</td></tr>
+              <tr><td><span class="badge badge-warning">PATCH</span></td><td>/api/Products/UpdatePrice</td><td>Update price</td><td>CanChangeProduct</td></tr>
+              <tr><td><span class="badge badge-warning">PATCH</span></td><td>/api/Products/UpdateStock</td><td>Update stock</td><td>CanChangeProduct</td></tr>
+              <tr><td><span class="badge badge-secondary">GET</span></td><td>/api/Order/Orders</td><td>List orders</td><td>CanReadOrders</td></tr>
+              <tr><td><span class="badge badge-secondary">GET</span></td><td>/api/Order/Orders{userId}</td><td>User orders</td><td>CanReadUserOrders</td></tr>
+              <tr><td><span class="badge badge-success">POST</span></td><td>/api/Order</td><td>Create order</td><td>ApplicationLogic</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/api/api-client.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components/layout.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/pages/dashboard.js"></script>
+</body>
+</html>

@@ -9,7 +9,7 @@ namespace OnlineShopProject.WebApi.EndPoint.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -19,7 +19,7 @@ namespace OnlineShopProject.WebApi.EndPoint.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "CanCreateProduct")]
+        //[Authorize(Policy = "CanCreateProduct")]
         public async Task<IActionResult> CreateAsync([FromBody] ProductRequest request)
         {
             Console.WriteLine();
@@ -28,7 +28,7 @@ namespace OnlineShopProject.WebApi.EndPoint.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "ApplicationLogic")]
+        //[Authorize(Policy = "ApplicationLogic")]
         public async Task<ActionResult<Pagination<ProductQuery>>> GetProducts([FromQuery] int pageNumber=1,[FromQuery] int size=10)
         {
             var result= await _productService.GetAllAsync(pageNumber, size);
@@ -36,7 +36,7 @@ namespace OnlineShopProject.WebApi.EndPoint.Controllers
         }
 
         [HttpDelete("Remove")]
-        [Authorize(Policy = "CanDeleteProduct")]
+        //[Authorize(Policy = "CanDeleteProduct")]
         public async Task<ActionResult<bool>> RemoveProduct(Guid productId, Guid deleterId)
         {
             var result=await _productService.RemoveProductAsync(productId, deleterId);
@@ -44,7 +44,7 @@ namespace OnlineShopProject.WebApi.EndPoint.Controllers
         }
 
         [HttpPatch("UpdatePrice")]
-        [Authorize(Policy = "CanChangeProduct")]
+        //[Authorize(Policy = "CanChangeProduct")]
         public async Task<ActionResult<bool>> UpdatePrice(UpdatePriceRequest updatePrice)
         {
             var result = await _productService.UpdateProductPriceAsync(updatePrice.ProductId, updatePrice.NewPrice, updatePrice.ModifiederId);
@@ -53,7 +53,7 @@ namespace OnlineShopProject.WebApi.EndPoint.Controllers
         }
 
         [HttpPatch("UpdateStock")]
-        [Authorize(Policy = "CanChangeProduct")]
+        //[Authorize(Policy = "CanChangeProduct")]
         public async Task<ActionResult<bool>> UpdateStock(UpdateStockRequest updateStock)
         {
             var result = await _productService.UpdateProductStockAsync(updateStock.productId,updateStock.stock,updateStock.modifierId);

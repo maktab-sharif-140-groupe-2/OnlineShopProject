@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders - Online Shop</title>
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/utilities.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+  <div class="page-content">
+    <div class="page-header">
+      <h2>My Orders</h2>
+    </div>
+
+    <div id="guid-input-section">
+      <div class="card max-w-md">
+        <div class="card-header">
+          <h3>Enter User ID</h3>
+        </div>
+        <div class="card-body">
+          <p class="text-muted mb-1">Enter the GUID of the user whose orders you want to view.</p>
+          <div class="form-group">
+            <label for="user-guid-input">User ID (GUID)</label>
+            <input type="text" id="user-guid-input" class="form-control" placeholder="e.g. 550e8400-e29b-41d4-a716-446655440000">
+          </div>
+          <button class="btn btn-primary" data-action="fetch-orders">View Orders</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="orders-section" class="hidden">
+      <div class="flex-row mb-2">
+        <span class="text-muted">Showing orders for:</span>
+        <code id="user-id-display" class="font-bold"></code>
+        <button class="btn btn-sm btn-outline" data-action="change-user">Change User</button>
+      </div>
+      <div class="card">
+        <div class="card-body" id="orders-container"></div>
+        <div class="card-footer" id="pagination-container"></div>
+      </div>
+    </div>
+  </div>
+  <script src="../js/config.js"></script>
+  <script src="../js/api/api-client.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/components/layout.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/pages/my-orders.js"></script>
+</body>
+</html>

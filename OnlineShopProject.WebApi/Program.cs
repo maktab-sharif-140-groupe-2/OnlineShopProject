@@ -43,6 +43,11 @@ builder.Services.AddIdentity<User, Role>(options =>
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddCors(option =>
+option.AddPolicy("CorsPolicy", builder =>
+builder.SetIsOriginAllowed((host) => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -103,6 +108,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
 builder.Services.AddAuthorization(op =>
 {
     op.AddPolicy("ApplicationLogic", policy => policy
@@ -144,12 +150,14 @@ builder.Services.AddAuthorization(op =>
 var app = builder.Build();
 await app.SeedDataBaseAsync();
 
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
